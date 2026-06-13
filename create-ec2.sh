@@ -30,7 +30,7 @@ for name in ${instances[@]}; do
 
     aws ec2 run-instances --image-id ami-0220d79f3f480ecf5 --instance-type $instance_type --security-group-ids sg-0bbdd2b154434fbfd --subnet-id subnet-0272da41f92b04b12 --query 'Instances[0].InstanceId' --output text
 
-aws route53 change-resource-record-sets --hosted-zone-id $hosted_zone_id --change-batch '
+aws route53 change-resource-record-sets --hosted-zone-id "$hosted_zone_id" --change-batch "$(cat <<EOF
 {
     "Comment": "Testing creating a record set",
     "Changes": [
@@ -48,7 +48,9 @@ aws route53 change-resource-record-sets --hosted-zone-id $hosted_zone_id --chang
             }
         }
     ]
-}'
+}
+EOF
+)"
 
 done
 
