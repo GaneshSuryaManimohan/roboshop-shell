@@ -1,7 +1,6 @@
 #!/bin/bash
 
 instances=("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "web")
-
 domain_name="surya-devops.online"
 hosted_zone_id="Z0198617Y0ILC4355WO7"
 
@@ -15,6 +14,7 @@ for name in ${instances[@]}; do
     echo "creating instance for: $name with instance type: $instance_type"
 
     instance_id=$(aws ec2 run-instances --image-id ami-0220d79f3f480ecf5 --instance-type $instance_type --security-group-ids sg-0bbdd2b154434fbfd --subnet-id subnet-0272da41f92b04b12 --query 'Instances[0].InstanceId' --output text)
+    echo "Instance Created for: $name with instance id: $instance_id"
 
     aws ec2 create-tags --resources $instance_id --tags Key=Name,Value=$name
 
@@ -28,16 +28,16 @@ for name in ${instances[@]}; do
         ip_to_use=$private_ip
     fi
 
-    aws ec2 run-instances --image-id ami-0220d79f3f480ecf5 --instance-type $instance_type --security-group-ids sg-0bbdd2b154434fbfd --subnet-id subnet-0272da41f92b04b12 --query 'Instances[0].InstanceId' --output text
-
+echo "Creating R53 record for $name with ip: $ip_to_use"
+    
 aws route53 change-resource-record-sets --hosted-zone-id "$hosted_zone_id" --change-batch "$(cat <<EOF
 {
-    "Comment": "Testing creating a record set",
+    "Comment": "Creating record for $name",
     "Changes": [
         {
             "Action": "UPSERT",
             "ResourceRecordSet": {
-                "Name": "$name.$domain_name",
+                "Name": "'$name.$domain_name'",
                 "Type": "A",
                 "TTL": 60,
                 "ResourceRecords": [
