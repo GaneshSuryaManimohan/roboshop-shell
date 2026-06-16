@@ -59,7 +59,7 @@ then
     rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>>$LOGFILE
     VALIDATE $? "Setting permissions for RabbitMQ user"
 else
-    echo "RabbitMQ user roboshop already exists. Skipping user creation."
+    echo -e "RabbitMQ user roboshop already exists... $Y Skipping user creation. $N"
 fi
 
 
