@@ -21,23 +21,24 @@ for name in ${instances[@]}; do
     if [ $name == "web" ]
     then
         aws ec2 wait instance-running --instance-ids $instance_id
-        public_ip=$(aws describe-instances --instance-ids $instance_id --query 'Reservations[0].Instances[0].[PublicIpAddress]' --output text)
+        public_ip=$(aws ec2 describe-instances --instance-ids $instance_id --query 'Reservations[0].Instances[0].[PublicIpAddress]' --output text)
         ip_to_use=$public_ip
     else
-        private_ip=$(aws describe-instances --instance-ids $instance_id --query 'Reservations[0].Instances[0].[PrivateIpAddress]' --output text)
+    aws ec2 wait instance-running --instance-ids $instance_id
+        private_ip=$(aws ec2 describe-instances --instance-ids $instance_id --query 'Reservations[0].Instances[0].[PrivateIpAddress]' --output text)
         ip_to_use=$private_ip
     fi
 
-echo "Creating R53 record for $name with ip: $ip_to_use"
+    echo "Creating R53 record for $name with ip: $ip_to_use"
     
-aws route53 change-resource-record-sets --hosted-zone-id "$hosted_zone_id" --change-batch "$(cat <<EOF
+    aws route53 change-resource-record-sets --hosted-zone-id "$hosted_zone_id" --change-batch "$(cat <<EOF
 {
     "Comment": "Creating record for $name",
     "Changes": [
         {
             "Action": "UPSERT",
             "ResourceRecordSet": {
-                "Name": "'$name.$domain_name'",
+                "Name": "$name.$domain_name",
                 "Type": "A",
                 "TTL": 60,
                 "ResourceRecords": [
