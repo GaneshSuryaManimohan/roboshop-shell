@@ -33,6 +33,9 @@ else
     echo "Running the script as super user"
 fi
 
+mkdir -p /app &>>$LOGFILE
+VALIDATE $? "Creating /app directory"
+
 dnf install mysql-server -y &>>$LOGFILE
 VALIDATE $? "Installing mysql-server package"
 
