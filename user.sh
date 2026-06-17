@@ -60,7 +60,7 @@ VALIDATE $? "Downloading User Code"
 cd /app  &>>$LOGFILE
 VALIDATE $? "Changing directory to /app"
 
-unzip /tmp/user.zip &>>$LOGFILE
+unzip -o /tmp/user.zip &>>$LOGFILE
 VALIDATE $? "Extracting user code"
 
 npm install &>>$LOGFILE

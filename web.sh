@@ -45,13 +45,13 @@ VALIDATE $? "Starting nginx service"
 rm -rf /usr/share/nginx/html/* &>>$LOGFILE
 VALIDATE $? "Removing default nginx content"
 
-curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip &>>$LOGFILE
+curl -L -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip &>>$LOGFILE
 VALIDATE $? "Downloading frontend code"
 
 cd /usr/share/nginx/html &>>$LOGFILE
 VALIDATE $? "Changing directory to nginx html"
 
-unzip /tmp/web.zip &>>$LOGFILE
+unzip -o /tmp/web.zip &>>$LOGFILE
 VALIDATE $? "Extracting frontend code"
 
 cp /home/ec2-user/roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf &>>$LOGFILE

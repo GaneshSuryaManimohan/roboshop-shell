@@ -54,7 +54,7 @@ VALIDATE $? "Downloading shipping code"
 cd /app &>>$LOGFILE
 VALIDATE $? "Changing directory to /app"
 
-unzip /tmp/shipping.zip &>>$LOGFILE
+unzip -o /tmp/shipping.zip &>>$LOGFILE
 VALIDATE $? "Extracting shipping code"
 
 mvn clean package &>>$LOGFILE

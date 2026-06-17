@@ -54,7 +54,7 @@ VALIDATE $? "Installing payment code"
 cd /app &>>$LOGFILE
 VALIDATE $? "Changing directory to /app"
 
-unzip /tmp/payment.zip &>>$LOGFILE
+unzip -o /tmp/payment.zip &>>$LOGFILE
 VALIDATE $? "Extracting payment code"
 
 pip3.11 install -r requirements.txt &>>$LOGFILE
