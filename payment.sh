@@ -36,8 +36,7 @@ fi
 dnf install python3.11 gcc python3-devel -y &>>$LOGFILE
 VALIDATE $? "Installing python3.11 and dependencies"
 
-id roboshop &>>$LOGFILE
-if [ $? -ne 0 ]
+if ! id roboshop &>>$LOGFILE
 then
     echo "Creating 'roboshop' user"
     useradd roboshop &>>$LOGFILE

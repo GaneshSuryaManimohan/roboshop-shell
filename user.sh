@@ -42,8 +42,7 @@ VALIDATE $? "Enabling nodejs:20 module"
 dnf install nodejs -y &>>$LOGFILE
 VALIDATE $? "Installing nodejs package"
 
-id roboshop &>>$LOGFILE
-if [ $? -ne 0 ]
+if ! id roboshop &>>$LOGFILE
 then
     echo "Creating 'roboshop' user"
     useradd roboshop &>>$LOGFILE

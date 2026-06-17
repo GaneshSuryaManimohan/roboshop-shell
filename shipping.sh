@@ -36,8 +36,7 @@ fi
 dnf install maven -y &>>$LOGFILE
 VALIDATE $? "Installing maven package"
 
-id roboshop &>>$LOGFILE
-if [ $? -ne 0 ]
+if ! id roboshop &>>$LOGFILE
 then
     echo "Creating 'roboshop' user"
     useradd roboshop &>>$LOGFILE
