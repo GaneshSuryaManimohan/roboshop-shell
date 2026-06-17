@@ -47,7 +47,7 @@ VALIDATE $? "Starting mysqld service"
 
 if [ -f /app/mysql_password_set ]
 then
-    echo "Root password is already set, skipping" | tee -a $LOGFILE
+    echo -e "Root password is already set... $Y SKIPPING $N" | tee -a $LOGFILE
 else
     mysql_secure_installation --set-root-pass RoboShop@1 &>>$LOGFILE
     VALIDATE $? "Set up root password for mysql"
