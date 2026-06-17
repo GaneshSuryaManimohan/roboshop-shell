@@ -36,8 +36,15 @@ fi
 dnf install python3.11 gcc python3-devel -y &>>$LOGFILE
 VALIDATE $? "Installing python3.11 and dependencies"
 
-useradd roboshop &>>$LOGFILE || true
-VALIDATE $? "Creating roboshop user"
+id roboshop &>>$LOGFILE
+if [ $? -ne 0 ]
+then
+    echo "Creating 'roboshop' user"
+    useradd roboshop &>>$LOGFILE
+    VALIDATE $? "Creating roboshop user"
+else
+    echo -e "User 'roboshop' already exists... $Y SKIPPING $N " | tee -a $LOGFILE
+fi
 
 mkdir -p /app &>>$LOGFILE
 VALIDATE $? "Creating /app directory"
