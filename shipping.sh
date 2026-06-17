@@ -78,14 +78,21 @@ VALIDATE $? "Starting shipping service"
 dnf install mysql -y &>>$LOGFILE
 VALIDATE $? "Installing mysql client"
 
-mysql -h mysql.surya-devops.online -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOGFILE
-VALIDATE $? "Installing mysql schema for shipping service"
+if [ -f /app/schema_loaded ]
+then
+    echo -e "MySQL schema/data for shipping already loaded...$Y SKIPPING $N" | tee -a $LOGFILE
+else
+    mysql -h mysql.surya-devops.online -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOGFILE
+    VALIDATE $? "Installing mysql schema for shipping service"
 
-mysql -h mysql.surya-devops.online -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOGFILE
-VALIDATE $? "Installing mysql app user for shipping service"
+    mysql -h mysql.surya-devops.online -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOGFILE
+    VALIDATE $? "Installing mysql app user for shipping service"
 
-mysql -h mysql.surya-devops.online -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOGFILE
-VALIDATE $? "Installing mysql master data for shipping service"
+    mysql -h mysql.surya-devops.online -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOGFILE
+    VALIDATE $? "Installing mysql master data for shipping service"
+
+    touch /app/schema_loaded
+fi
 
 systemctl restart shipping &>>$LOGFILE
 VALIDATE $? "Restarting shipping service"
