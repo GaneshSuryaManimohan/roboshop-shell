@@ -85,5 +85,13 @@ VALIDATE $? "Copying mongo.repo file to yum.repos.d"
 dnf install mongodb-mongosh -y &>>$LOGFILE
 VALIDATE $? "Installing mongoshell package"
 
-mongosh --host mongodb.surya-devops.online </app/schema/user.js &>>$LOGFILE
-VALIDATE $? "Loading user schema to mongodb"
+SCHEMA_EXISTS=$(mongosh --host mongodb.surya-devops.online --quiet --eval "db.getMongo().getDBNames().indexOf('users')") &>>$LOGFILE
+if [ $SCHEMA_EXISTS -lt 0 ]
+then
+    echo "Users schema doesn't exist. Loading Schema"
+    mongosh --host mongodb.surya-devops.online </app/schema/user.js &>>$LOGFILE
+    VALIDATE $? "Loading user schema to mongodb"
+else
+    echo -e "Users schema already exists... $Y SKIPPING $N"
+fi
+
